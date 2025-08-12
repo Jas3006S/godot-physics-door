@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://detwgjy63yrhd"]
+
+[ext_resource type="Script" uid="uid://b0fyf3uy0o373" path="res://house_scenes/physics_door.gd" id="1_e4adi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_awpw7"]
+size = Vector3(1, 1.95, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_awpw7"]
+size = Vector3(1, 1.95, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4cto0"]
+albedo_color = Color(0.134797, 0.765373, 0.55584, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5elst"]
+material = SubResource("StandardMaterial3D_4cto0")
+size = Vector3(0.1, 2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e4adi"]
+size = Vector3(0.1, 2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4cto0"]
+size = Vector3(1, 1.95, 0.1)
+
+[node name="PhysicsDoor" type="Node3D"]
+script = ExtResource("1_e4adi")
+
+[node name="Door" type="RigidBody3D" parent="."]
+collision_layer = 8
+mass = 5.0
+inertia = Vector3(2, 8, 2)
+linear_damp = 0.5
+angular_damp = 0.7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 1, 1, 2, 0)
+mesh = SubResource("BoxMesh_awpw7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 1, 2, 0)
+shape = SubResource("BoxShape3D_awpw7")
+
+[node name="DoorFrame" type="StaticBody3D" parent="."]
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="DoorFrame"]
+transform = Transform3D(1.233, 0, 0, 0, -8.77288e-08, -12, 0, 2.007, -5.24537e-07, 0, 2, 0)
+node_a = NodePath("..")
+node_b = NodePath("../../Door")
+angular_limit/enable = true
+angular_limit/upper = 1.74533
+angular_limit/lower = -1.91986
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorFrame"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.112753, 2, 0)
+layers = 16
+mesh = SubResource("BoxMesh_5elst")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorFrame"]
+transform = Transform3D(2.00459, 0, 0, 0, 2.00459, 0, 0, 0, 2.00459, -0.113, 2, 0)
+shape = SubResource("BoxShape3D_e4adi")
+
+[node name="CloseDoor" type="Timer" parent="."]
+wait_time = 0.35
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 0)
+shape = SubResource("BoxShape3D_4cto0")
+
+[connection signal="timeout" from="CloseDoor" to="." method="_on_close_door_timeout"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://b1thust8to3hg"]
+
+[ext_resource type="Script" uid="uid://dmbqo6gxw3bua" path="res://player/player_version_2.gd" id="1_4r42t"]
+[ext_resource type="Texture2D" uid="uid://87eb1jnddt5j" path="res://images/flashlight_cookie.jpeg" id="2_e5xeg"]
+[ext_resource type="PackedScene" uid="uid://bklkfmobom6sm" path="res://player/physics_component.tscn" id="4_q16ix"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tbw62"]
+height = 2.77861
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5xeg"]
+radius = 0.49846
+height = 1.2851
+
+[node name="Player_version2" type="CharacterBody3D" groups=["Player"]]
+script = ExtResource("1_4r42t")
+
+[node name="StandingColShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.38138, 0, 0, 0, 1.38138, 0, 0, 0, 1.38138, 0, 1.93952, 0)
+shape = SubResource("CapsuleShape3D_tbw62")
+
+[node name="CrouchingColShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.38138, 0, 0, 0, 1.38138, 0, 0, 0, 1.38138, 0, 0.912043, 0)
+shape = SubResource("CapsuleShape3D_e5xeg")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+
+[node name="Eyes" type="Node3D" parent="Head"]
+
+[node name="Camera3D" type="Camera3D" parent="Head/Eyes"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.210247, 0)
+fov = 90.0
+
+[node name="InteractionRaycast" type="RayCast3D" parent="Head/Eyes/Camera3D"]
+unique_name_in_owner = true
+target_position = Vector3(0, 0, -3)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.976915, 0, 0.397189, 1)
+debug_shape_thickness = 5
+
+[node name="Hand" type="Marker3D" parent="Head/Eyes/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+
+[node name="Hand" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00377321, 3.01581, 0.00214583)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Hand"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00533009, -0.684106)
+light_energy = 15.0
+light_indirect_energy = 3.5
+light_volumetric_fog_energy = 10.0
+light_projector = ExtResource("2_e5xeg")
+shadow_enabled = true
+spot_range = 15.6121
+spot_attenuation = 1.5
+spot_angle = 44.0864
+spot_angle_attenuation = 0.164938
+
+[node name="StandUpCheck" type="RayCast3D" parent="."]
+target_position = Vector3(0, 2, 0)
+
+[node name="PhysicsComponent" parent="." instance=ExtResource("4_q16ix")]
